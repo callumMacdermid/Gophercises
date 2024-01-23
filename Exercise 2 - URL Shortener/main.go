@@ -10,15 +10,19 @@ import (
 
 func main() {
 
-	var yamlPath = flag.String("path", "", "Path to YAML URL File")
-
+	// var yamlPath = flag.String("yaml-path", "", "Path to YAML URL File")
+	var jsonPath = flag.String("json-path", "", "Path to JSON URL File")
 	flag.Parse()
 
-	//fmt.Println(*yamlPath)
+	// fmt.Println(yamlPath)
+	// yamlFile, err := os.ReadFile(*yamlPath)
+	// if err != nil {
+	// 	fmt.Print("Error reading YAML File from Path ", string(*yamlPath))
+	// }
 
-	yamlFile, err := os.ReadFile(*yamlPath)
+	jsonFile, err := os.ReadFile(*jsonPath)
 	if err != nil {
-		fmt.Print("Error reading YAML File from Path ", string(*yamlPath))
+		fmt.Print(err)
 	}
 
 	mux := defaultMux()
@@ -39,12 +43,18 @@ func main() {
 	// - path: /urlshort-final
 	//   url: https://github.com/gophercises/urlshort/tree/solution
 	// `
-	yamlHandler, err := urlshort.YAMLHandler([]byte(yamlFile), mapHandler)
+	jsonHandler, err := urlshort.JSONHandler([]byte(jsonFile), mapHandler)
 	if err != nil {
 		panic(err)
 	}
+
+	// yamlHandler, err := urlshort.YAMLHandler([]byte(yamlFile), mapHandler)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(yamlHandler)
 	fmt.Println("Starting the server on :8080")
-	http.ListenAndServe(":8080", yamlHandler)
+	http.ListenAndServe(":8080", jsonHandler)
 }
 
 func defaultMux() *http.ServeMux {
